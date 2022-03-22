@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:text="Insert 5k"
+        android:text="Insert Large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextMessage"
         app:layout_constraintStart_toEndOf="@id/button_insert"
