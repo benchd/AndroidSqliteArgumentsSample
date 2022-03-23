@@ -45,14 +45,20 @@ class FirstFragment : Fragment() {
 
             buttonInsert5k.setOnClickListener {
                 Log.e(TAG, "Insert5k: Begins")
+
                 for (i in 1..5000) {
+                    //-----------Trace begin-----------
                     dbHelper.addContact(createRandomString(), createRandomString())
+                    //----------Trace End-----------
                 }
+
                 Log.e(TAG, "Insert5k: Ends XXXXX")
             }
 
             buttonInsert.setOnClickListener {
+                //-----------Trace begin-----------
                 dbHelper.addContact(editTextName.text.toString(), editTextMessage.text.toString())
+                //------------Trace End------------
                 editTextName.text.clear()
                 editTextMessage.text.clear()
                 Snackbar.make(view, "Data Inserted", Snackbar.LENGTH_LONG)

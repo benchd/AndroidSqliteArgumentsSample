@@ -99,10 +99,16 @@ class DbHelper(private val myContext: Context) :
     }
     fun addContact(name:String,message:String) {
 
-        val values = ContentValues()
+        val sql="Insert into $TABLE_CONTACTS ($KEY_NAME , $KEY_MESSAGE) values (? , ?)"
+
+/*        val values = ContentValues()
         values.put(KEY_NAME, name) // Contact Name
         values.put(KEY_MESSAGE, message) // Contact Phone
-        writableDatabase.insert(TABLE_CONTACTS, null, values)
+        writableDatabase.insert(TABLE_CONTACTS, null, values)*/
+        val arr= arrayOf(name,message)
+        //---------Trace Begins-----------------
+        writableDatabase.execSQL(sql,arr)
+        //----------Trace End-----------
         writableDatabase.close()
     }
 
