@@ -102,6 +102,8 @@ class DbHelper(private val myContext: Context) :
         val values = ContentValues()
         values.put(KEY_NAME, name) // Contact Name
         values.put(KEY_MESSAGE, message) // Contact Phone
+
+        // Want to be able to turn on Trace here, sqlite3_trace_v2 before insert and before update.
         writableDatabase.insert(TABLE_CONTACTS, null, values)
         writableDatabase.close()
     }
