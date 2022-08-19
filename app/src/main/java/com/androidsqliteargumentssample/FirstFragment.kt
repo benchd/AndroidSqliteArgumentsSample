@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.androidsqliteargumentssample.databinding.FragmentFirstBinding
 import com.androidsqliteargumentssample.db.DbHelper
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 import kotlin.random.Random
 
 /**
@@ -36,6 +37,8 @@ class FirstFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        System.loadLibrary("sqliteX")
+
         dbHelper = DbHelper(context)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,6 +59,12 @@ class FirstFragment : Fragment() {
             }
 
             buttonInsert.setOnClickListener {
+                val property = System.getProperty("java.library.path")
+                val parser = StringTokenizer(property, ";")
+                while (parser.hasMoreTokens()) {
+                    System.err.println(parser.nextToken())
+                }
+
                 //-----------Trace begin-----------
                 dbHelper.addContact(editTextName.text.toString(), editTextMessage.text.toString())
                 //------------Trace End------------

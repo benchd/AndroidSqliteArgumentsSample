@@ -3,9 +3,10 @@ package com.androidsqliteargumentssample.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
+
 import android.util.Log
+import org.sqlite.database.sqlite.SQLiteDatabase
+import org.sqlite.database.sqlite.SQLiteOpenHelper
 import java.sql.SQLException
 
 
@@ -20,7 +21,7 @@ class DbHelper(private val myContext: Context) :
     }
 
 
-/*    @Throws(SQLException::class)
+/*    @Throws(com.androidsqliteargumentssample.java.org.sqlite.database.SQLException::class)
     fun openDataBaseOffline() {
         // Open the database
         val myPath = DB_PATH_OFFLINE
@@ -31,7 +32,7 @@ class DbHelper(private val myContext: Context) :
             )
     }*/
 
-/*    @Throws(SQLException::class)
+/*    @Throws(com.androidsqliteargumentssample.java.org.sqlite.database.SQLException::class)
     fun openDataBaseMain() {
         // Open the database
         val myPath = DB_PATH_MAIN
