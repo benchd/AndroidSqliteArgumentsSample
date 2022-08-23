@@ -16,14 +16,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
-        ndk {
-            abiFilters "armeabi-v7a", "x86", "armeabi", "mips"
-        }
         externalNativeBuild {
             cmake {
                 cppFlags ""
             }
+
+
+
         }
+
 
     }
 
@@ -34,7 +35,17 @@ android {
         }
     }
 
+    externalNativeBuild {
 
+
+
+        // Encapsulates your ndkBuild build configurations.
+        ndkBuild {
+
+            // Provides a relative path to your ndkBuild Android.mk file.
+            path "src/main/jni/Android.mk"
+        }
+    }
 
 
     compileOptions {

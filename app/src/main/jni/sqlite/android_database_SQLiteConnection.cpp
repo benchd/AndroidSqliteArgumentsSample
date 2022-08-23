@@ -96,7 +96,7 @@ struct SQLiteConnection {
 // Called each time a statement begins execution, when tracing is enabled.
 static void sqliteTraceCallback(void *data, const char *sql) {
     SQLiteConnection* connection = static_cast<SQLiteConnection*>(data);
-    ALOG(LOG_VERBOSE, SQLITE_TRACE_TAG, "Harsh %s: \"%s\"\n",
+    ALOG(LOG_VERBOSE, SQLITE_TRACE_TAG, "David %s: \"%s\"\n",
             connection->label.c_str(), sql);
 }
 
