@@ -3,16 +3,21 @@ package com.androidsqliteargumentssample.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-
 import android.util.Log
 import org.sqlite.database.sqlite.SQLiteDatabase
 import org.sqlite.database.sqlite.SQLiteOpenHelper
-import java.sql.SQLException
 
 
 class DbHelper(private val myContext: Context) :
     SQLiteOpenHelper(myContext, DATABASE_NAME, null, DATABASE_VERSION)
 /*SQLiteOpenHelper(DatabaseContext(myContext, dbPath), dbName, null, 1)*/ {
+
+
+
+
+
+    private lateinit var nativeStore: NativeStore
+
     private val dbNamePassed = DATABASE_NAME
     private val TAG = "DbHelper"
     override fun onOpen(db: SQLiteDatabase?) {
@@ -49,7 +54,11 @@ class DbHelper(private val myContext: Context) :
     }
 
     fun insertQuery(tableName: String, values: ContentValues) {
+
+
         this.writableDatabase.insert(tableName, null, values)
+
+
     }
 
     fun updateQuery(
@@ -103,8 +112,27 @@ class DbHelper(private val myContext: Context) :
         val values = ContentValues()
         values.put(KEY_NAME, name) // Contact Name
         values.put(KEY_MESSAGE, message) // Contact Phone
+
+
+        System.out.println("library: " + System.getProperty("java.library.path"))
         // Want to be able to turn on Trace here, sqlite3_trace_v2 before insert and before update.
         writableDatabase.insert(TABLE_CONTACTS, null, values)
+        nativeStore = NativeStore()
+
+        var ss:String = ""
+//        nativeStore.test()
+
+       // nativeStore.Java_com_androidsqliteargumentssample_db_ss1()
+
+      //  ss = nativeStore.Java_com_androidsqliteargumentssample_db_ss1()
+
+      //  ss = nativeStore.stringFromJNI()
+
+//        Log.d(TAG, "addContact " + ss)
+
+        nativeStore.test()
+
+        ss = nativeStore.ss1()
         writableDatabase.close()
     }
 

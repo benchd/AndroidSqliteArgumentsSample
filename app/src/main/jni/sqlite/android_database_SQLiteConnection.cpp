@@ -39,7 +39,42 @@
 // Set to 1 to use UTF16 storage for localized indexes.
 #define UTF16_STORAGE 0
 
+// dmb begin
+extern "C"
+{
+    //
+JNIEXPORT jboolean JNICALL Java_com_example_myapplication_BamBridge_test();
+}
+
+
+extern "C"
+{
+    JNIEXPORT jboolean JNICALL Java_com_androidsqliteargumentssample_db_NativeStore_test()
+    {
+        return true;
+    }
+}
+
+extern "C" JNIEXPORT jstring
+
+JNICALL
+Java_com_androidsqliteargumentssample_db_NativeStore_ss1(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string hello = "Hello from C++";
+    return env->NewStringUTF(hello.c_str());
+}
+// dmb end
+
+
 namespace android {
+
+
+
+
+
+
+
 
 /* Busy timeout in milliseconds.
  * If another connection (possibly in another process) has the database locked for
