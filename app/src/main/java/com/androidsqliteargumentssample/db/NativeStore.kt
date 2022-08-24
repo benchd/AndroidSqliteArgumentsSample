@@ -11,6 +11,9 @@ class NativeStore {
 //    external fun testFunction(): Int
     external fun test():Boolean
     external fun ss1():String
+    external fun TraceCallbackCount():Int
+    external fun ss2(foo: Int):String
+
     companion object {
 
         @JvmStatic

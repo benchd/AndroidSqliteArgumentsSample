@@ -46,25 +46,46 @@ extern "C"
 JNIEXPORT jboolean JNICALL Java_com_example_myapplication_BamBridge_test();
 }
 
+static std::string LastSql;
+static  int SqlTraceCallbackCount = 0;
+
 
 extern "C"
 {
     JNIEXPORT jboolean JNICALL Java_com_androidsqliteargumentssample_db_NativeStore_test()
     {
+        ALOG(LOG_VERBOSE, SQLITE_PROFILE_TAG, "test \"%s\" SqlTraceCallbackCount %d\n",
+             LastSql.c_str(), SqlTraceCallbackCount);
         return true;
     }
-}
 
-extern "C" JNIEXPORT jstring
+    JNIEXPORT int JNICALL Java_com_androidsqliteargumentssample_db_NativeStore_TraceCallbackCount()
+    {
 
-JNICALL
-Java_com_androidsqliteargumentssample_db_NativeStore_ss1(
-        JNIEnv *env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
-}
+        return SqlTraceCallbackCount;
+    }
+
+
+
+    extern "C" JNIEXPORT jstring JNICALL Java_com_androidsqliteargumentssample_db_NativeStore_ss2(JNIEnv *env, jobject obj, jint  CallbackCount )
+    {
+        if (SqlTraceCallbackCount  == CallbackCount + 1)
+        {
+            return env->NewStringUTF(LastSql.c_str());
+        }
+        else
+        {
+            return env->NewStringUTF(NULL);
+        }
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL  Java_com_androidsqliteargumentssample_db_NativeStore_ss1(JNIEnv *env, jobject /* this */)
+    {
+        std::string hello = "Hello from C++";
+        return env->NewStringUTF(hello.c_str());
+    }
 // dmb end
+}
 
 
 namespace android {
@@ -131,6 +152,10 @@ struct SQLiteConnection {
 // Called each time a statement begins execution, when tracing is enabled.
 static void sqliteTraceCallback(void *data, const char *sql) {
     SQLiteConnection* connection = static_cast<SQLiteConnection*>(data);
+
+    SqlTraceCallbackCount++;
+    LastSql = sql;
+
     ALOG(LOG_VERBOSE, SQLITE_TRACE_TAG, "David99 %s: \"%s\"\n",
             connection->label.c_str(), sql);
 }

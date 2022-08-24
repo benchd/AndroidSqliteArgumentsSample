@@ -13,17 +13,31 @@ class DbHelper(private val myContext: Context) :
 /*SQLiteOpenHelper(DatabaseContext(myContext, dbPath), dbName, null, 1)*/ {
 
 
+    private var didInsertOrUpdate:Boolean = false
 
 
 
-    private lateinit var nativeStore: NativeStore
+    private  var nativeStore: NativeStore = NativeStore()
 
     private val dbNamePassed = DATABASE_NAME
     private val TAG = "DbHelper"
     override fun onOpen(db: SQLiteDatabase?) {
         super.onOpen(db)
         Log.d(TAG, "onOpen: Executed with $dbNamePassed")
+
+//        var callbackCountBeforeInsert:Int = 0
+//
+//        if (nativeStore == null) {
+//            nativeStore = NativeStore()
+//            callbackCountBeforeInsert = nativeStore.TraceCallbackCount()
+//
+//
+//        }
+
+
     }
+
+
 
 
 /*    @Throws(com.androidsqliteargumentssample.java.org.sqlite.database.SQLException::class)
@@ -107,33 +121,93 @@ class DbHelper(private val myContext: Context) :
     ) {
         // Not Used
     }
+
+    fun insertMPH(table: String?, nullColumnHack: String?, values: ContentValues?)
+    {
+        if (!didInsertOrUpdate) {
+            var dummy = writableDatabase
+            didInsertOrUpdate = true
+        }
+
+        var callbackCountBeforeInsert:Int = nativeStore.TraceCallbackCount()
+        writableDatabase.insert(TABLE_CONTACTS, null, values)
+
+        var dummyString:String = nativeStore.ss2(callbackCountBeforeInsert)
+        if (dummyString != null)
+        {
+            Log.d(TAG, "insertMPH captured sql: " + dummyString)
+        }
+        else
+        {
+            Log.d(TAG, "insertMPH unable to catpure sql")
+        }
+
+    }
     fun addContact(name:String,message:String) {
 
         val values = ContentValues()
         values.put(KEY_NAME, name) // Contact Name
         values.put(KEY_MESSAGE, message) // Contact Phone
 
+        insertMPH(TABLE_CONTACTS, null, values)
 
-        System.out.println("library: " + System.getProperty("java.library.path"))
-        // Want to be able to turn on Trace here, sqlite3_trace_v2 before insert and before update.
-        writableDatabase.insert(TABLE_CONTACTS, null, values)
-        nativeStore = NativeStore()
-
-        var ss:String = ""
+//
+//
+//        System.out.println("library: " + System.getProperty("java.library.path"))
+//        // Want to be able to turn on Trace here, sqlite3_trace_v2 before insert and before update.
+//
+//        nativeStore = NativeStore()
+////        if (nativeStore == nil) {
+////            nativeStore = NativeStore()
+////
+////
+////        }
+//
+//
+//        if (!didInsertOrUpdate) {
+//            var dummy = writableDatabase
+//            didInsertOrUpdate = true
+//        }
+//
+//
+//        var callbackCountBeforeInsert:Int = nativeStore.TraceCallbackCount()
+//        writableDatabase.insert(TABLE_CONTACTS, null, values)
+//
+//        var dummyString:String = nativeStore.ss2(callbackCountBeforeInsert)
+//        if (dummyString != null)
+//        {
+//            Log.d(TAG, "dummyString not null")
+//        }
+//        else
+//        {
+//            Log.d(TAG, "dummyString is null")
+//        }
+//
+//
+////        nativeStore.test()
+//
+//
+//
+//
+//        nativeStore.test()
+//
+//        var callbackCountAfterInsert:Int = nativeStore.TraceCallbackCount()
+//
+//        var ss:String = ""
+//
+//       // nativeStore.Java_com_androidsqliteargumentssample_db_ss1()
+//
+//      //  ss = nativeStore.Java_com_androidsqliteargumentssample_db_ss1()
+//
+//      //  ss = nativeStore.stringFromJNI()
+//
+////        Log.d(TAG, "addContact " + ss)
+//
+//
+//        ss = nativeStore.ss1()
 //        nativeStore.test()
 
-       // nativeStore.Java_com_androidsqliteargumentssample_db_ss1()
-
-      //  ss = nativeStore.Java_com_androidsqliteargumentssample_db_ss1()
-
-      //  ss = nativeStore.stringFromJNI()
-
-//        Log.d(TAG, "addContact " + ss)
-
-        nativeStore.test()
-
-        ss = nativeStore.ss1()
-        writableDatabase.close()
+        //writableDatabase.close()
     }
 
     companion object {
