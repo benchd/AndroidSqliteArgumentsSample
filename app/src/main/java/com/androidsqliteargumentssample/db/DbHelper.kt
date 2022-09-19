@@ -17,12 +17,13 @@ class DbHelper(private val myContext: Context) :
 
 
 
-    private  var nativeStore: NativeStore = NativeStore()
+    public  var nativeStore: NativeStore = NativeStore()
 
     private val dbNamePassed = DATABASE_NAME
     private val TAG = "DbHelper"
     override fun onOpen(db: SQLiteDatabase?) {
         super.onOpen(db)
+
         Log.d(TAG, "onOpen: Executed with $dbNamePassed")
 
 //        var callbackCountBeforeInsert:Int = 0
@@ -148,7 +149,7 @@ class DbHelper(private val myContext: Context) :
         val values = ContentValues()
         values.put(KEY_NAME, name) // Contact Name
         values.put(KEY_MESSAGE, message) // Contact Phone
-
+        //insertQuery(TABLE_CONTACTS,  values)
         insertMPH(TABLE_CONTACTS, null, values)
 
 //

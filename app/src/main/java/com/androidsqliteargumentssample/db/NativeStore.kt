@@ -13,7 +13,7 @@ class NativeStore {
     external fun ss1():String
     external fun TraceCallbackCount():Int
     external fun ss2(foo: Int):String
-
+    external fun stringFromJNI(name: String, path: String): String
     companion object {
 
         @JvmStatic

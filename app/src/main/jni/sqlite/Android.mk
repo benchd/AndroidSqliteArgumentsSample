@@ -41,9 +41,14 @@ LOCAL_SRC_FILES:=                             \
 	android_database_SQLiteConnection.cpp \
 	android_database_SQLiteGlobal.cpp     \
 	android_database_SQLiteDebug.cpp      \
-	JNIHelp.cpp JniConstants.cpp
+	JNIHelp.cpp JniConstants.cpp     \
+
 
 LOCAL_SRC_FILES += sqlite3.c
+
+LOCAL_SRC_FILES += simplehello.c
+
+# LOCAL_SRC_FILES += dbhash.c
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH) $(LOCAL_PATH)/nativehelper/
 

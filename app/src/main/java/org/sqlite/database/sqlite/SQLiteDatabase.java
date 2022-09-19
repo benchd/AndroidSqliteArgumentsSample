@@ -710,7 +710,7 @@ public final class SQLiteDatabase extends SQLiteClosable {
      * Equivalent to openDatabase(path, factory, CREATE_IF_NECESSARY).
      */
     public static SQLiteDatabase openOrCreateDatabase(String path, CursorFactory factory) {
-        return openDatabase(path, factory, CREATE_IF_NECESSARY, null);
+        return openDatabase(path, factory, NO_LOCALIZED_COLLATORS ^ CREATE_IF_NECESSARY, null);
     }
 
     /**
@@ -718,7 +718,7 @@ public final class SQLiteDatabase extends SQLiteClosable {
      */
     public static SQLiteDatabase openOrCreateDatabase(String path, CursorFactory factory,
             DatabaseErrorHandler errorHandler) {
-        return openDatabase(path, factory, CREATE_IF_NECESSARY, errorHandler);
+        return openDatabase(path, factory, NO_LOCALIZED_COLLATORS ^ CREATE_IF_NECESSARY, errorHandler);
     }
 
     /**
