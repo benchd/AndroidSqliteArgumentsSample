@@ -19,7 +19,7 @@ object Zipper {
                 )
             )
             if (sourceFile.isDirectory) {
-                zipSubFolder(out, sourceFile, sourceFile.parent.length)
+                zipSubFolder(out, sourceFile, sourceFile.absolutePath.length+1)
             } else {
                 val data = ByteArray(BUFFER)
                 val fi = FileInputStream(sourcePath)

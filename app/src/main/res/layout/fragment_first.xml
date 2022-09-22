@@ -59,8 +59,8 @@
         android:layout_height="wrap_content"
         android:text="Zip"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_upload"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_insert" />
 
     <Button
@@ -72,6 +72,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_zip"
         app:layout_constraintTop_toBottomOf="@+id/button_insert5k" />
+
+    <Button
+        android:id="@+id/btnViewStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Storage"
+        app:layout_constraintBottom_toTopOf="@+id/button_insert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextMessage" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

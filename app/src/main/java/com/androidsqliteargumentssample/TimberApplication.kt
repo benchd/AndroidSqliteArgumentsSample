@@ -18,7 +18,7 @@ class TimberApplication:Application() {
     }
     companion object{
 
-        private var sApplication: Application? = null
+         var sApplication: Application? = null
         fun getContext(): Context? {
             return sApplication
         }

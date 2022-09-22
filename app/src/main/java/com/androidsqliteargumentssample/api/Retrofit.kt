@@ -18,9 +18,9 @@ import javax.net.ssl.X509TrustManager
 
 object Retrofit {
 
-    private const val connectTimeout: Long = 30// 20s
-    private const val readTimeout: Long = 30 // 20s
-    private const val WRITE_TIMEOUT: Long = 30
+    private const val connectTimeout: Long = 60// 20s
+    private const val readTimeout: Long = 60 // 20s
+    private const val WRITE_TIMEOUT: Long = 60
     fun provideRetrofit(baseUrl: String): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())

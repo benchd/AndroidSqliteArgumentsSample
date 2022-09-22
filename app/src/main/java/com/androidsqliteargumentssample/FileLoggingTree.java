@@ -52,8 +52,8 @@ public class FileLoggingTree extends Timber.DebugTree {
 
         TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
         rollingPolicy.setContext(loggerContext);
-        rollingPolicy.setFileNamePattern(logDirectory + "/" + ".%d{ddMMyyyy}.%i.log");
-        rollingPolicy.setMaxHistory(2);
+        rollingPolicy.setFileNamePattern(logDirectory + "/" + ".%d{MMddYYYY}.%i.log");
+        rollingPolicy.setMaxHistory(5);
         rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(fileNamingPolicy);
         rollingPolicy.setParent(rollingFileAppender);  // parent and context required!
         rollingPolicy.start();
@@ -117,7 +117,7 @@ public class FileLoggingTree extends Timber.DebugTree {
         }
     }
     public static String getCurrentTimeStamp() {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("ddMMyyyy");//dd/MM/yyyy
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MMddyyyy");//dd/MM/yyyy
         Date now = new Date();
         String strDate = sdfDate.format(now);
         return strDate;

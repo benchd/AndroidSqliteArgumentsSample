@@ -1,39 +1,37 @@
 package com.androidsqliteargumentssample
 
+
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.StatFs
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.androidsqliteargumentssample.api.Retrofit
-import com.androidsqliteargumentssample.api.SendData
 import com.androidsqliteargumentssample.api.ShaUtil256
 import com.androidsqliteargumentssample.api.UploadService
 import com.androidsqliteargumentssample.databinding.FragmentFirstBinding
 import com.androidsqliteargumentssample.db.DbHelper
 import com.androidsqliteargumentssample.db.NativeStore
+import com.anggrayudi.storage.file.DocumentFileCompat
+import com.anggrayudi.storage.file.StorageId
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import okhttp3.MultipartBody.Part.Companion.createFormData
-import okhttp3.RequestBody
-import java.io.File
-
-
-import okhttp3.MediaType
+import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-
 import okhttp3.MultipartBody
 import okhttp3.MultipartBody.Part.Companion.create
-
-
-import retrofit2.http.Part
+import okhttp3.RequestBody
 import timber.log.Timber
-import java.sql.Time
-
+import java.io.File
 import java.util.*
 import kotlin.random.Random
 
@@ -135,32 +133,116 @@ class FirstFragment : Fragment() {
                 Zipper.zipFileAtPath("$filePath/logs","$filePath/log.zip")
 
             }
-            btnUpload.setOnClickListener{
+            btnUpload.setOnClickListener {
 
+                try {
+                    val file = File("$filePath/log.zip")
+                    val hash = ShaUtil256.hashFile(file)
+                    val requestFile =
+                        RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
-                val file = File("$filePath/log.zip")
-                val hash=ShaUtil256.hashFile(file)
-                val requestFile =RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
-                val requestBodyHash=RequestBody.create("text/plain".toMediaTypeOrNull(),"123")
-                val body = createFormData("logfileszip", file.name, requestFile)
+                    val body = createFormData("logfileszip", file.name, requestFile, hash)
+                    val tz = TimeZone.getDefault()
+                    val now = Date()
+                    val offsetFromUtc = tz.getOffset(now.time) / 1000
+                    val freeBytesOfPrimary =
+                        context?.let { it1 ->
+                            DocumentFileCompat.getFreeSpace(
+                                it1,
+                                StorageId.PRIMARY
+                            )
+                        }
+                    val totalBytesOfPrimary =
+                        context?.let { it1 ->
+                            DocumentFileCompat.getStorageCapacity(
+                                it1,
+                                StorageId.PRIMARY
+                            )
+                        }
 
-                val sendData= SendData(hash)
-                CoroutineScope(Dispatchers.IO).launch {
+                    val extra = Extra(
+                        "$offsetFromUtc",
+                        "$totalBytesOfPrimary",
+                        tz.displayName,
+                        "$freeBytesOfPrimary"
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
 
-                    try {
-                        uploadService.upload("","aa","299347341",requestBodyHash,body)
-                    } catch (e: Exception) {
+                        try {
+                            uploadService.upload(
+                                Gson().toJson(extra), "aa", "299347341", body
+                            )
 
-                        Timber.tag("UploadService").e(e.stackTraceToString())
+                        } catch (e: Exception) {
+
+                            Timber.tag("UploadService").e(e.stackTraceToString())
+
+                        }
 
                     }
+                } catch (e: Exception) {
 
+                    Timber.tag("UploadService").e(e.stackTraceToString())
 
                 }
 
             }
+            btnViewStorage.setOnClickListener {
+
+                val data =
+                    "${getDeviceName()},                 ${getAndroidVersion()},                     ${Build.MODEL}"
+                val stat = StatFs(Environment.getExternalStorageDirectory().path)
+                val bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong
+                val megAvailable = bytesAvailable / (1024 * 1024)
+                val freeBytesOfPrimary =
+                    context?.let { it1 -> DocumentFileCompat.getFreeSpace(it1, StorageId.PRIMARY) }
+
+                Timber.d("Available MB : $freeBytesOfPrimary")
+
+                Toast.makeText(
+                    context,
+                    "Available MB : $freeBytesOfPrimary,$bytesAvailable,\r\n Info :$data ",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
 
         }
+    }
+
+    private fun getAndroidVersion(): String? {
+        val release = Build.VERSION.RELEASE
+        val sdkVersion = Build.VERSION.SDK_INT
+        return "Android SDK: $sdkVersion ($release)"
+    }
+
+    private fun getDeviceName(): String? {
+        var userDeviceName =
+            Settings.Global.getString(TimberApplication.sApplication?.contentResolver, Settings.Global.DEVICE_NAME)
+        if (userDeviceName == null) userDeviceName =
+            Settings.Secure.getString(TimberApplication.sApplication?.contentResolver, "bluetooth_name")
+        return userDeviceName
+    }
+
+
+    fun createFormData(
+        name: String,
+        filename: String?,
+        body: RequestBody,
+        hash: String
+    ): MultipartBody.Part {
+        val disposition = buildString {
+            append("form-data; name=")
+            append("\"$name\"")
+            if (filename != null) {
+                append("; filename=")
+                append("\"$filename\"")
+            }
+
+        }
+        val headers =
+            Headers.headersOf("Hash", hash).newBuilder().add("Content-Disposition", disposition)
+                .build()
+        return create(headers, body)
     }
 
     private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
